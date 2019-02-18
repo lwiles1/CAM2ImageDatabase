@@ -11,17 +11,19 @@ def rest():
 
 # GET Request: results corresponding to given query
 @rest.command(context_settings={"ignore_unknown_options": True})
-@click.argument('query', nargs=-1)
-def get(query):
+@click.argument('features', nargs=-1)
+def get(features):
   """
-  This search and returns results to the given query.
+  Search by Camera ID or by features. Returns results of given query.
   """
-  click.echo(query)
+  click.echo(features)
   # TODO Get query
 
 # POST Request: send folder and optional csv file
 @rest.command(context_settings={"ignore_unknown_options": True})
-@click.argument('folder', type=click.Path(exists=True, dir_okay=True, allow_dash=True))
+@click.argument('folder', type=click.Path(exists=True,
+                                          dir_okay=True,
+                                          allow_dash=True))
 @click.argument('csv', required=False, type=click.Path(exists=False))
 def post(folder, csv):
   """
@@ -50,13 +52,6 @@ def post(folder, csv):
 def put():
   """
   PUT request
-  """
-
-# Request: DELETE
-@rest.command(context_settings={"ignore_unknown_options": True})
-def delete():
-  """
-  DELETE request
   """
 
 if __name__ == '__main__':
