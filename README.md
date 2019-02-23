@@ -4,7 +4,6 @@ A python script that will give user the images/videos that are listed in a .csv 
 * Input: a .csv file that contains file names and bucket name as input
 * Output: a .tar file that contain the images/videos correspond to the .csv file
 
-Sample Output:
 ![Result](https://i.ibb.co/GcGXcbg/Screen-Shot-2019-02-22-at-11-56-46-PM.jpg)
 
 ## **Usage**
