@@ -2,30 +2,15 @@
 # Author: Haoran Wang
 # Purpose: Given a CSV file, file names and bucket name as input, return a TAR file with images compressed in it.
 
+import sys
 import pandas as pd
 import subprocess as sp
+import time
 import datetime
 
-csv_file_name = "sample.csv"
-host_name = "myminio"
-
+# File name is named after time stamp
 ts = datetime.datetime.now()
 folder_name = ts.strftime("%Y-%m-%d") + "_" + ts.strftime("%I.%M.%S_%p")
-
-# Read in CSV as a data frame
-# Fill in two lists, file_names and bucket_name
-df = pd.read_csv(csv_file_name, sep=',', header=0, engine='python')
-file_names = df.File_Names.tolist()
-bucket_name = df.Bucket_Name.tolist()
-
-# Check if two lists are valid before proceeding
-error = 0
-error_message = "Please Fix CSV Before Proceeding"
-for i in range(file_names.__len__()):
-    if isinstance(file_names[i], str) == False or isinstance(bucket_name[i], str) == False or file_names[i] == "" or \
-            bucket_name[i] == "":
-        error = 1
-
 
 # Make bucket downloadable
 def policy_download_cmd():
@@ -35,12 +20,11 @@ def policy_download_cmd():
         print(returned_output)
 
 
-# Create folder
+# Create temp folder
 def mkdir_cmd():
     cmd = "mkdir " + folder_name
     # print(cmd)
-    returned_output = sp.call(cmd, shell=True)
-    print(returned_output)
+    sp.call(cmd, shell=True)
 
 
 # Download Files by running cp command
@@ -54,16 +38,41 @@ def cp_cmd():
 # Compress the folder and deliver a .tar file
 def tar_cmd():
     cmd = "tar -cvf " + folder_name + ".tar " + folder_name
-    returned_output = sp.call(cmd, shell=True)
-    print(returned_output)
+    sp.call(cmd, shell=True)
+
+
+# Delete temp folder
+def rm_cmd():
+    cmd = "rm -r " + folder_name
+    sp.call(cmd, shell=True)
 
 
 if __name__ == '__main__':
 
-    if error == 1:
-        print(error_message)
+    start_time = time.time()
+
+    # Check parameters before proceeding
+    if len(sys.argv) != 3 or isinstance(sys.argv[1], str) is False or isinstance(sys.argv[2], str) is False or \
+            sys.argv[1] == "" or sys.argv[2] == "":
+        print("Invalid Parameters")
+        sys.exit()
 
     else:
+        host_name = sys.argv[1]
+        csv_file_name = sys.argv[2]
+
+        # Read in CSV as a data frame
+        # Fill in two lists, file_names and bucket_name
+        df = pd.read_csv(csv_file_name, sep=',', header=0, engine='python')
+        file_names = df.File_Names.tolist()
+        bucket_name = df.Bucket_Name.tolist()
+
+        # Check if two lists are valid before proceeding
+        for i in range(file_names.__len__()):
+            if isinstance(file_names[i], str) is False or isinstance(bucket_name[i], str) is False or \
+                    file_names[i] == "" or bucket_name[i] == "":
+                print("Please Fix CSV Before Proceeding")
+                sys.exit()
 
         # Make all files downloadable
         policy_download_cmd()
@@ -74,5 +83,11 @@ if __name__ == '__main__':
         # Download images to that folder
         cp_cmd()
 
-        # Compress folder
+        # Compress temp folder
         tar_cmd()
+
+        # Delete temp folder
+        rm_cmd()
+
+        print("===============================================================")
+        print("Finished in --%s-- seconds" % (time.time()-start_time))
