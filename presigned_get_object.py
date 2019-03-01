@@ -1,23 +1,15 @@
-# CAM2 - Image Database
-# Author: Haoran Wang
-# Purpose: Given a CSV file, file names and bucket name as input, return a TAR file with images compressed in it.
-
+from minio import Minio
+from minio.error import ResponseError
 import sys
 import pandas as pd
 import subprocess as sp
 import time
 import datetime
 
+
 # File name is named after time stamp
 ts = datetime.datetime.now()
 folder_name = ts.strftime("%Y-%m-%d") + "_" + ts.strftime("%I.%M.%S_%p")
-
-# Make bucket downloadable
-def policy_download_cmd():
-    for i in range(bucket_name.__len__()):
-        cmd = "mc policy download " + host_name + "/" + bucket_name[i] + "/"
-        returned_output = sp.call(cmd, shell=True)
-        print(returned_output)
 
 
 # Create temp folder
@@ -25,14 +17,6 @@ def mkdir_cmd():
     cmd = "mkdir " + folder_name
     # print(cmd)
     sp.call(cmd, shell=True)
-
-
-# Download Files by running cp command
-def cp_cmd():
-    for i in range(file_names.__len__()):
-        cmd = "mc cp " + host_name + "/" + bucket_name[i] + "/" + file_names[i] + " ./" + folder_name
-        returned_output = sp.call(cmd, shell=True)
-        print(returned_output)
 
 
 # Compress the folder and deliver a .tar file
@@ -49,17 +33,17 @@ def rm_cmd():
 
 if __name__ == '__main__':
 
+    minioClient = Minio('localhost:9000', access_key='FX770DGQ10M2ALSRVX3F', secret_key='qCO+rTTAGoPdaf5m39dleP5+vr9f15sCT0RGAbLl', secure=False)
+
     start_time = time.time()
 
     # Check parameters before proceeding
-    if len(sys.argv) != 3 or isinstance(sys.argv[1], str) is False or isinstance(sys.argv[2], str) is False or \
-            sys.argv[1] == "" or sys.argv[2] == "":
+    if len(sys.argv) != 2 or isinstance(sys.argv[1], str) is False or sys.argv[1] == "":
         print("Invalid Parameters")
         sys.exit()
 
     else:
-        host_name = sys.argv[1]
-        csv_file_name = sys.argv[2]
+        csv_file_name = sys.argv[1]
 
         # Read in CSV as a data frame
         # Fill in two lists, file_names and bucket_name
@@ -74,14 +58,22 @@ if __name__ == '__main__':
                 print("Please Fix CSV Before Proceeding")
                 sys.exit()
 
-        # Make all files downloadable
-        policy_download_cmd()
-
         # Make a folder named with timestamp
         mkdir_cmd()
 
-        # Download images to that folder
-        cp_cmd()
+        # presigned get object URL for object name, expires in 2 days.
+        URLs = list()
+        try:
+            for i in range(file_names.__len__()):
+                URLs.append(minioClient.presigned_get_object('nyc', file_names[i], expires=datetime.timedelta(days=2)))
+        # Response error is still possible since internally presigned does get bucket location.
+        except ResponseError as err:
+            print(err)
+
+        # Download images from url to temp folder
+        for i in range(URLs.__len__()):
+            cmd = "cd ./" + folder_name + " &&  wget " + URLs[i]
+            sp.call(cmd, shell=True)
 
         # Compress temp folder
         tar_cmd()
