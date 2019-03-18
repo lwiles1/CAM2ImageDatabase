@@ -18,7 +18,7 @@ def policy_download_cmd():
     for i in range(bucket_name.__len__()):
         cmd = "mc policy download " + host_name + "/" + bucket_name[i] + "/"
         returned_output = sp.call(cmd, shell=True)
-        print(returned_output)
+        # print(returned_output)
 
 
 # Create temp folder
@@ -33,7 +33,7 @@ def cp_cmd():
     for i in range(file_names.__len__()):
         cmd = "mc cp " + host_name + "/" + bucket_name[i] + "/" + file_names[i] + " ./" + folder_name
         returned_output = sp.call(cmd, shell=True)
-        print(returned_output)
+        # print(returned_output)
 
 
 # Compress the folder and deliver a .tar file

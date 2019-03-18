@@ -1,3 +1,7 @@
+# CAM2 - Image Database
+# Author: Haoran Wang
+# Purpose: Given a CSV file, file names and bucket name as input, return a TAR file with images compressed in it.
+
 from minio import Minio
 from minio.error import ResponseError
 import sys

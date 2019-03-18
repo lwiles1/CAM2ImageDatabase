@@ -1,3 +1,7 @@
+# CAM2 - Image Database
+# Author: Haoran Wang
+# Purpose: Given a CSV file, file names and bucket name as input, return a TAR file with images compressed in it.
+
 from minio import Minio
 from minio.error import ResponseError
 
@@ -65,7 +69,7 @@ if __name__ == '__main__':
         # Get a full object and prints the original object stat information.
         try:
             for i in range(file_names.__len__()):
-                print(minioClient.fget_object('nyc', file_names[i], './' + folder_name + '/' + file_names[i]))
+                minioClient.fget_object('nyc', file_names[i], './' + folder_name + '/' + file_names[i])
         except ResponseError as err:
             print(err)
 
