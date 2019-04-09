@@ -19,7 +19,7 @@ def rest():
 # TODO Get by image ID as well
 def get(features):#, cameraID):
   """
-  Search by Camera ID or by features. Returns results of given query.
+  Query database by camera ID or by a list of features
   """
   if features == None:# and cameraID == None:
     # Get all
@@ -37,7 +37,7 @@ def get(features):#, cameraID):
 @click.argument('csv', required=False, type=click.Path(exists=True, dir_okay=False))
 def post(download, folder, csv):
   """
-  This uploads a folder of images and possibly the csv.
+  Uploads a folder of images and an optional .csv features file
   """
   if isAdmin:
     # Make sure folder and file are appropriate
@@ -62,7 +62,14 @@ def post(download, folder, csv):
 @rest.command(context_settings={"ignore_unknown_options": True})
 def put():
   """
-  PUT request
+  Update a camera ID with a .csv file
+  """
+
+# Request: DELETE 
+@rest.command(context_settings={"ignore_unknown_options": True})
+def delete():
+  """
+  Remove a camera ID
   """
 
 def checkAdmin():
