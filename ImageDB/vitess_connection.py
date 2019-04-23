@@ -185,5 +185,26 @@ class VitessConn:
 	def insertImagefeatures(self, relations):
 		sql = 'INSERT IGNORE INTO RELATION(Feature_ID, IV_ID) VALUES (%s, %s)'
 		self.mycursor.executemany(sql, relations)
-		
+
+  # this funciton adds a column to the camera table
+  def addColumnCameraTable(self, columnName, datatype):
+    sql = 'ALTER TABLE CAMERA \
+        ADD ' + columnName + ' ' + datatype
+		self.mycursor.execute(sql)
+		print('Column added to CAMERA table.')
+
+  # this funciton adds a column to the image table
+  def addColumnImageTable(self, columnName, datatype):
+    sql = 'ALTER TABLE IMAGE_VIDEO \
+        ADD ' + columnName + ' ' + datatype
+		self.mycursor.execute(sql)
+		print('Column added to IMAGE table.')
+    pass
 	
+  # this funciton adds a column to the image-feature relation table
+  def addColumnRelationTable(self, columnName, datatype):
+    sql = 'ALTER TABLE RELATION \
+        ADD ' + columnName + ' ' + datatype
+		self.mycursor.execute(sql)
+		print('Column added to RELATION table.')
+    pass
