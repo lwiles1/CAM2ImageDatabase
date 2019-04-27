@@ -168,7 +168,7 @@ class VitessConn:
 		# if so, return the feature ID
 		sql = 'SELECT Feature_ID FROM FEATURE WHERE Feature_Name = \'' + featureName + '\''
 		self.mycursor.execute(sql)
-		result = self.mycursor.fetchall()
+		result = self.mycursor.fetchall()}
 		result = list(sum(result, ()))
 		if(len(result) > 0):
 			return result[0]
@@ -186,25 +186,23 @@ class VitessConn:
 		sql = 'INSERT IGNORE INTO RELATION(Feature_ID, IV_ID) VALUES (%s, %s)'
 		self.mycursor.executemany(sql, relations)
 
-  # this funciton adds a column to the camera table
-  def addColumnCameraTable(self, columnName, datatype):
-    sql = 'ALTER TABLE CAMERA \
-        ADD ' + columnName + ' ' + datatype
+	# this funciton adds a column to the camera table
+	def addColumnCameraTable(self, columnName, datatype):
+		sql = 'ALTER TABLE CAMERA \
+			ADD ' + columnName + ' ' + datatype
 		self.mycursor.execute(sql)
 		print('Column added to CAMERA table.')
 
-  # this funciton adds a column to the image table
-  def addColumnImageTable(self, columnName, datatype):
-    sql = 'ALTER TABLE IMAGE_VIDEO \
-        ADD ' + columnName + ' ' + datatype
+  	# this funciton adds a column to the image table
+  	def addColumnImageTable(self, columnName, datatype):
+    		sql = 'ALTER TABLE IMAGE_VIDEO \
+        		ADD ' + columnName + ' ' + datatype
 		self.mycursor.execute(sql)
 		print('Column added to IMAGE table.')
-    pass
 	
-  # this funciton adds a column to the image-feature relation table
-  def addColumnRelationTable(self, columnName, datatype):
-    sql = 'ALTER TABLE RELATION \
-        ADD ' + columnName + ' ' + datatype
+  	# this funciton adds a column to the image-feature relation table
+  	def addColumnRelationTable(self, columnName, datatype):
+    		sql = 'ALTER TABLE RELATION \
+        		ADD ' + columnName + ' ' + datatype
 		self.mycursor.execute(sql)
 		print('Column added to RELATION table.')
-    pass
