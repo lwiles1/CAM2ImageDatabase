@@ -9,13 +9,41 @@ import argparse
 import sys
 import datetime
 
+'''Function to check if the latitude value is within range'''
+def latitude_range_check(lat):
+
+    try:
+        lat = float(lat)
+        if lat >= -90 and  lat <= 90:
+            return True
+        raise ValueError
+    except ValueError:
+        msg = "Given Value({0}) is not valid! Latitude value should be within range -90 to +90.".format(lat)
+        raise argparse.ArgumentTypeError(msg)
+
+
+'''Function to check if the longitude value is within range'''
+def longitude_range_check(longitude):
+    try:
+        longitude = float(longitude)
+        if longitude >= -180 and  longitude <= 180:
+            return True
+        raise ValueError
+    except ValueError:
+        msg = "Given Value({0}) is not valid! Longitude value should be within range -180 to +180.".format(longitude)
+        raise argparse.ArgumentTypeError(msg)
+
+
+
 
 '''Function to check if the input value contains alphabets only'''
 def alphabetsonly(astr):
     try:
-        return astr.isalpha()
+        if astr.isalpha():
+            return True
+        raise ValueError
     except ValueError:
-        msg = "Given Value({0}) is not valid! Expected alphabets only"
+        msg = "Given Value({0}) is not valid! Expected alphabets only".format(astr)
         raise argparse.ArgumentTypeError(msg)
 
 '''Function to check if the date was entered in the correct format.'''
@@ -36,16 +64,16 @@ def valid_time_type(arg_time_str):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("-lat", "--latitude",action ="store",dest="latitude", type= float,
-                        help="Latitude of camera location.")
-    parser.add_argument("-long", "--longitude", action ="store",dest="longitude",type= float,
+    parser.add_argument("-lat", "--latitude",action ="store",dest="latitude",
+                        help="Latitude of camera location." ,type= latitude_range_check)
+    parser.add_argument("-long", "--longitude", action ="store",dest="longitude",type= longitude_range_check,
                         help="Longitude of camera location.")
-    parser.add_argument("-city", "--city",action ="store",type = alphabetsonly,dest="city",
-                        help="Camera Location City")
-    parser.add_argument("-state", "--state",action ="store",dest="state",type=alphabetsonly,
-                        help="Camera Location State")
-    parser.add_argument("-country", "--country", action ="store",dest="country",type=alphabetsonly,
-                        help="Camera Location Country")
+    parser.add_argument("-city", "--city",action ="store",dest="city",
+                        help="Camera Location City",type = alphabetsonly)
+    parser.add_argument("-state", "--state",action ="store",dest="state",
+                        help="Camera Location State",type=alphabetsonly)
+    parser.add_argument("-country", "--country", action ="store",dest="country",
+                        help="Camera Location Country",type=alphabetsonly)
     parser.add_argument("-cid", "--camid", action ="store",dest="camera_id",type=int,
                         help="The ID of the Camera")
     parser.add_argument("-date", "--date", action ="store",dest="date",
