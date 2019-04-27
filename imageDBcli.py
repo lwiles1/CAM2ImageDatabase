@@ -87,15 +87,20 @@ def delete():
   Remove a camera ID
   """
 
+# Check if the user is an admin
 def checkAdmin():
   global isAdmin
 
+  # Get $USER environment variable
   user = os.environ['USER']
+  
+  # See if user exists in users.csv file
   f = open('users.csv')
   csv_f = csv.reader(f)
   for row in csv_f:
     if row[0] == user:
       isAdmin = True
+      break
 
 if __name__ == '__main__':
   checkAdmin()
