@@ -11,7 +11,6 @@ import datetime
 
 '''Function to check if the latitude value is within range'''
 def latitude_range_check(lat):
-
     try:
         lat = float(lat)
         if lat >= -90 and  lat <= 90:
@@ -20,7 +19,6 @@ def latitude_range_check(lat):
     except ValueError:
         msg = "Given Value({0}) is not valid! Latitude value should be within range -90 to +90.".format(lat)
         raise argparse.ArgumentTypeError(msg)
-
 
 '''Function to check if the longitude value is within range'''
 def longitude_range_check(longitude):
@@ -32,9 +30,6 @@ def longitude_range_check(longitude):
     except ValueError:
         msg = "Given Value({0}) is not valid! Longitude value should be within range -180 to +180.".format(longitude)
         raise argparse.ArgumentTypeError(msg)
-
-
-
 
 '''Function to check if the input value contains alphabets only'''
 def alphabetsonly(astr):
@@ -84,7 +79,6 @@ def main():
                         help="The time format is HH:mm:ss.Time the image was taken",type=valid_time_type)
     parser.add_argument("-feature", "--feature", nargs ='+',action="store", dest="feature",
                         help="Features in the image")
-
     parser.add_argument("-download","--download", action ="store_true", dest= "download", help ="Marks download parameter as true if mentioned else false")
 
     args = parser.parse_args()
